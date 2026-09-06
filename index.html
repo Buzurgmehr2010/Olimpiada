@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olympiada — Найди свою олимпиаду</title>
+<meta name="description" content="Платформа для поиска олимпиад по всему миру. Более 120 олимпиад из 39 стран.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  :root {
+    --bg: #fbfbfd;
+    --bg-section: #f5f5f7;
+    --ink: #1d1d1f;
+    --ink-soft: #6e6e73;
+    --blue: #6366f1;
+    --blue-dark: #4f46e5;
+    --line: #d2d2d7;
+    --white: #ffffff;
+    --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero */
+  .hero {
+    background: #0a0a0a;
+    color: #f5f5f7;
+    padding: 120px 24px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -40%; left: 50%;
+    width: 1000px; height: 1000px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.25);
+    padding: 8px 20px; border-radius: 980px;
+    font-size: 0.85rem; font-weight: 600; color: #a5b4fc;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    position: relative;
+    font-size: clamp(38px, 6.5vw, 72px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 20px;
+  }
+  .hero h1 span {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p {
+    position: relative;
+    font-size: clamp(17px, 2.2vw, 22px);
+    color: #a1a1a6;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+  }
+  .hero-cta {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--gradient);
+    color: #fff;
+    border-radius: 980px;
+    padding: 16px 36px;
+    font-size: 17px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: none;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+  }
+  .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.5); }
+  .hero-cta:active { transform: scale(0.97); }
+
+  .hero-stats {
+    position: relative;
+    display: flex; gap: 48px; justify-content: center;
+    margin-top: 60px; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-size: 2rem; font-weight: 700; color: #fff; }
+  .hero-stat-label { font-size: 0.9rem; color: #a1a1a6; margin-top: 4px; }
+
+  /* About */
+  .about {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 80px 24px 20px;
+    text-align: center;
+  }
+  .about h2 {
+    font-size: clamp(24px, 3.5vw, 34px);
+    font-weight: 700;
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+  .about p {
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  /* Picker */
+  .picker {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 72px 24px 40px;
+    text-align: center;
+  }
+  .picker h2 {
+    font-size: clamp(26px, 3.6vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+  }
+  .picker .sub {
+    color: var(--ink-soft);
+    font-size: 18px;
+    margin: 0 0 40px;
+  }
+  .group { margin-bottom: 36px; text-align: left; }
+  .group-label {
+    font-size: 14px; font-weight: 600;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  }
+  .chip {
+    border: 1.5px solid var(--line);
+    background: var(--white);
+    color: var(--ink);
+    border-radius: 980px;
+    padding: 12px 22px;
+    font-size: 15px; font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .chip:hover { border-color: var(--blue); color: var(--blue); }
+  .chip.selected {
+    background: var(--gradient); border-color: transparent;
+    color: #fff; box-shadow: 0 2px 12px rgba(99,102,241,0.3);
+  }
+
+  .pill-row {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .pill {
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 980px;
+    padding: 10px 20px;
+    font-size: 14px; font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .pill:hover { border-color: var(--blue); color: var(--blue); }
+  .pill.selected {
+    background: var(--ink); border-color: var(--ink); color: #fff;
+  }
+
+  .find-btn {
+    background: var(--gradient);
+    color: #fff;
+    border: none;
+    border-radius: 980px;
+    padding: 16px 40px;
+    font-size: 17px; font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+  }
+  .find-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+  .find-btn:active { transform: scale(0.97); }
+  .find-btn:disabled {
+    background: var(--line); color: #9a9a9e;
+    cursor: not-allowed; box-shadow: none;
+  }
+
+  /* Results */
+  .results {
+    background: var(--bg-section);
+    padding: 72px 24px 100px;
+    min-height: 300px;
+  }
+  .results-inner { max-width: 1100px; margin: 0 auto; }
+  .results-empty {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 18px;
+    padding: 80px 20px;
+  }
+  .results-empty i { font-size: 3rem; display: block; margin-bottom: 16px; color: var(--line); }
+
+  .subject-group {
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: rise 0.5s ease forwards;
+  }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  .subject-group h3 {
+    font-size: 22px; font-weight: 700; margin: 0 0 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .subject-group h3 .count {
+    font-size: 13px; font-weight: 600;
+    background: rgba(99,102,241,0.1); color: var(--blue);
+    padding: 4px 12px; border-radius: 8px;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    border-color: rgba(99,102,241,0.15);
+  }
+  .card .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .card .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 600;
+    color: var(--blue);
+    background: rgba(99,102,241,0.08);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+  .card .badge.country { color: #b45309; background: rgba(180,83,9,0.08); }
+  .card h4 { font-size: 16px; font-weight: 700; margin: 0 0 8px; line-height: 1.35; }
+  .card p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+  .card .meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--bg-section);
+    font-size: 13px; color: var(--ink-soft);
+  }
+  .card .meta b { color: var(--ink); font-weight: 600; }
+  .card .meta i { color: var(--blue); margin-right: 4px; }
+
+  /* Note */
+  .note {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+  footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .subject-group { animation: none; opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 100px 20px 70px; }
+    .hero-stats { gap: 24px; }
+    .picker { padding: 50px 16px 30px; }
+    .chip { padding: 10px 16px; font-size: 14px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-badge"><i class="bi bi-trophy"></i> 126 олимпиад из 39 стран</div>
+  <h1>Найди свою <span>олимпиаду</span></h1>
+  <p>Выбери предметы, в которых ты силён — покажем, где проверить себя: от школьных этапов до международных финалов.</p>
+  <a href="#picker" class="hero-cta"><i class="bi bi-search"></i> Начать поиск</a>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">126+</div><div class="hero-stat-label">Олимпиад</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">39</div><div class="hero-stat-label">Стран мира</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">15+</div><div class="hero-stat-label">Предметов</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">Бесплатно</div></div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <h2>Зачем этот сайт</h2>
+  <p>Многие сильные ученики не участвуют в олимпиадах просто потому, что не знают, какие вообще существуют по их предметам — особенно за пределами школьной программы своей страны. Этот сайт собирает олимпиады по предметам, странам и международному уровню в одном месте.</p>
+</section>
+
+<section class="picker" id="picker">
+  <h2>В чём ты силён?</h2>
+  <p class="sub">Можно выбрать несколько предметов, страну и уровень.</p>
+
+  <div class="group">
+    <div class="group-label">Предметы</div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="group">
+    <div class="group-label">Страна / регион</div>
+    <div class="pill-row" id="countryRow"></div>
+  </div>
+
+  <div class="group">
+    <div class="group-label">Уровень</div>
+    <div class="pill-row" id="levelRow"></div>
+  </div>
+
+  <button class="find-btn" id="findBtn" disabled><i class="bi bi-search"></i> Показать олимпиады</button>
+</section>
+
+<section class="results" id="results">
+  <div class="results-inner" id="resultsInner">
+    <div class="results-empty">
+      <i class="bi bi-trophy"></i>
+      Выбери хотя бы один предмет — и здесь появятся олимпиады.
+    </div>
+  </div>
+</section>
+
+<p class="note">Список не претендует на полноту. Даты и стоимость участия у многих олимпиад объявляются организаторами заново каждый год. Проходной балл устанавливается ежегодно — эту цифру всегда стоит уточнять на официальном сайте конкретной олимпиады.</p>
+
+<footer>
+  <p>&copy; 2026 <a href="https://github.com/Buzurgmehr2010/Olimpiada">Olympiada</a>. Все права защищены.</p>
+</footer>
+
+<script>
+const DATA = {
+  "Математика": [
+    { name:"International Mathematical Olympiad (IMO)", country:"Международная", level:"Международный", when:"Июль", desc:"Самая престижная математическая олимпиада мира для старшеклассников.", fee:"Бесплатно" },
+    { name:"IMSO — Международная для начальной школы", country:"Южная Корея", level:"Международный", when:"Ноябрь", desc:"Олимпиада для учащихся начальных классов из более чем 30 стран.", fee:"Бесплатно" },
+    { name:"Putnam Competition", country:"США", level:"Международный", when:"Декабрь", desc:"Престижнейшее математическое соревнование среди студентов.", fee:"Бесплатно" },
+    { name:"Китайская математическая олимпиада (CMO)", country:"Китай", level:"Международный", when:"Ноябрь", desc:"Один из самых сложных отборов в мире.", fee:"Бесплатно" },
+    { name:"Японская математическая олимпиада (JMO)", country:"Япония", level:"Международный", when:"Январь", desc:"Высокий уровень задач, отбор в сборную для IMO.", fee:"Бесплатно" },
+    { name:"Турецкая математическая олимпиада (TMO)", country:"Турция", level:"Международный", when:"Март", desc:"Задачи повышенной сложности, отбор в сборную.", fee:"Бесплатно" },
+    { name:"Иранская математическая олимпиада", country:"Иран", level:"Международный", when:"Февраль", desc:"Одна из сильнейших математических олимпиад Азии.", fee:"Бесплатно" },
+    { name:"Бразильская математическая олимпиада (OBM)", country:"Бразилия", level:"Международный", when:"Октябрь", desc:"Крупнейшая олимпиада Латинской Америки — более 10 млн учеников.", fee:"Бесплатно" },
+    { name:"Австралийская математическая олимпиада (AMO)", country:"Австралия", level:"Международный", when:"Май", desc:"Задачи на логику и креативное мышление.", fee:"Бесплатно" },
+    { name:"Канадская математическая олимпиада (CMO)", country:"Канада", level:"Международный", when:"Февраль", desc:"Отбор в сборную Канады для IMO.", fee:"Бесплатно" },
+    { name:"Олимпиада БРИКС по математике", country:"БРИКС", level:"Международный", when:"Июнь", desc:"Для учащихся Бразилии, России, Индии, Китая и ЮАР.", fee:"Бесплатно" },
+    { name:"Европейская девичья математическая олимпиада (EGMO)", country:"Европа", level:"Международный", when:"Апрель", desc:"Олимпиада для девушек-математиков из Европы и мира.", fee:"Бесплатно" },
+    { name:"Romanian Master of Mathematics (RMM)", country:"Румыния", level:"Международный", when:"Февраль", desc:"Одна из самых сложных математических олимпиад в Европе.", fee:"Бесплатно" },
+    { name:"Арабская математическая олимпиада (AMO)", country:"Арабские страны", level:"Международный", when:"Март", desc:"Олимпиада для арабских стран.", fee:"Бесплатно" },
+    { name:"African Mathematical Olympiad", country:"Африка", level:"Международный", when:"Июнь", desc:"Математическая олимпиада для африканских стран.", fee:"Бесплатно" },
+    { name:"ASEAN Math Olympiad", country:"Юго-Восточная Азия", level:"Международный", when:"Июнь", desc:"Математическая олимпиада стран АСЕАН.", fee:"Бесплатно" },
+    { name:"Олимпиада Купа Америка", country:"Латинская Америка", level:"Международный", when:"Сентябрь", desc:"Математическая олимпиада стран Латинской Америки.", fee:"Бесплатно" },
+    { name:"Nordic Mathematical Contest (NMC)", country:"Скандинавия", level:"Международный", when:"Февраль", desc:"Математическая олимпиада скандинавских стран.", fee:"Бесплатно" },
+    { name:"Central Asian Math Olympiad", country:"Центральная Азия", level:"Международный", when:"Май", desc:"Математическая олимпиада стран Центральной Азии.", fee:"Бесплатно" },
+    { name:"Кавказская олимпиада по математике", country:"Кавказ", level:"Международный", when:"Май", desc:"Олимпиада для стран Кавказского региона.", fee:"Бесплатно" },
+    { name:"Gulf Math Olympiad", country:"Персидский залив", level:"Международный", when:"Март", desc:"Математическая олимпиада стран Персидского залива.", fee:"Бесплатно" },
+    { name:"Восточно-азиатская математическая олимпиада", country:"Восточная Азия", level:"Международный", when:"Июнь", desc:"Олимпиада для стран Восточной Азии.", fee:"Бесплатно" },
+    { name:"Balkan Mathematical Olympiad (BMO)", country:"Балканы", level:"Международный", when:"Май", desc:"Математическая олимпиада Балканских стран.", fee:"Бесплатно" },
+    { name:"Олимпиада СНГ по математике", country:"СНГ", level:"Международный", when:"Май", desc:"Олимпиада для стран СНГ.", fee:"Бесплатно" },
+    { name:"Олимпиада стран ОИК по математике", country:"ОИК", level:"Международный", when:"Июль", desc:"Олимпиада для стран Организации Исламского сотрудничества.", fee:"Бесплатно" },
+    { name:"Китайская девичья математическая олимпиада", country:"Китай", level:"Международный", when:"Март", desc:"Олимпиада для девушек-математиков в Китае.", fee:"Бесплатно" }
+  ],
+  "Информатика": [
+    { name:"International Olympiad in Informatics (IOI)", country:"Международная", level:"Международный", when:"Август", desc:"Главная олимпиада по информатике в мире.", fee:"Бесплатно" },
+    { name:"Байкальская олимпиада по информатике (BOI)", country:"АТР", level:"Международный", when:"Июнь", desc:"Олимпиада для стран Азиатско-Тихоокеанского региона.", fee:"Бесплатно" },
+    { name:"Китайская олимпиада по информатике (COI)", country:"Китай", level:"Международный", when:"Октябрь", desc:"Одна из сильнейших олимпиад по информатике.", fee:"Бесплатно" },
+    { name:"Японская олимпиада по информатике (JOI)", country:"Япония", level:"Международный", when:"Декабрь", desc:"Задачи на программирование и алгоритмы.", fee:"Бесплатно" },
+    { name:"Иранская олимпиада по информатике", country:"Иран", level:"Международный", when:"Ноябрь", desc:"Высокий уровень задач по алгоритмам.", fee:"Бесплатно" },
+    { name:"Олимпиада по информатике стран Балтии", country:"Балтия", level:"Международный", when:"Май", desc:"Для Эстонии, Латвии и Литвы.", fee:"Бесплатно" },
+    { name:"Южно-Африканская олимпиада по информатике (SAIOI)", country:"ЮАР", level:"Международный", when:"Сентябрь", desc:"Отбор в сборную для IOI.", fee:"Бесплатно" },
+    { name:"Румынская олимпиада по информатике (ROI)", country:"Румыния", level:"Международный", when:"Май", desc:"Одна из старейших олимпиад по информатике в Европе.", fee:"Бесплатно" },
+    { name:"Корейская олимпиада по информатике (KOI)", country:"Южная Корея", level:"Международный", when:"Октябрь", desc:"Задачи на программирование.", fee:"Бесплатно" },
+    { name:"Олимпиада СОВЕТ арабских стран", country:"Арабские страны", level:"Международный", when:"Ноябрь", desc:"Совместная олимпиада арабских стран.", fee:"Бесплатно" },
+    { name:"Олимпиада Купа Америка по информатике", country:"Латинская Америка", level:"Международный", when:"Октябрь", desc:"Олимпиада по информатике стран Латинской Америки.", fee:"Бесплатно" },
+    { name:"Шёлковый путь — Олимпиада по информатике", country:"Центральная Азия", level:"Международный", when:"Июнь", desc:"Для стран Шёлкового пути.", fee:"Бесплатно" },
+    { name:"Японо-корейская олимпиада по информатике", country:"Япония / Южная Корея", level:"Международный", when:"Сентябрь", desc:"Совместная олимпиада Японии и Южной Кореи.", fee:"Бесплатно" },
+    { name:"Олимпиада СНГ по информатике", country:"СНГ", level:"Международный", when:"Июнь", desc:"Олимпиада для стран СНГ.", fee:"Бесплатно" },
+    { name:"Олимпиада стран ОИК по информатике", country:"ОИК", level:"Международный", when:"Август", desc:"Для стран ОИК.", fee:"Бесплатно" },
+    { name:"Google Code Jam", country:"США", level:"Международный", when:"Апрель", desc:"Глобальное соревнование по программированию от Google.", fee:"Бесплатно" },
+    { name:"Facebook Hacker Cup", country:"США", level:"Международный", when:"Август", desc:"Соревнование по программированию от Meta.", fee:"Бесплатно" },
+    { name:"TopCoder Open", country:"США", level:"Международный", when:"Ноябрь", desc:"Престижное соревнование по алгоритмическому программированию.", fee:"Бесплатно" },
+    { name:"FIRST LEGO League", country:"Международная", level:"Школьный", when:"Декабрь", desc:"Робототехника с конструктором LEGO для младших школьников.", fee:"Бесплатно" }
+  ],
+  "Физика": [
+    { name:"International Physics Olympiad (IPhO)", country:"Международная", level:"Международный", when:"Июль", desc:"Главная олимпиада по физике для старшеклассников.", fee:"Бесплатно" },
+    { name:"Asian Physics Olympiad (APhO)", country:"Азия", level:"Международный", when:"Май", desc:"Крупнейшая физическая олимпиада Азии.", fee:"Бесплатно" },
+    { name:"European Physics Olympiad (EuPhO)", country:"Европа", level:"Международный", when:"Апрель", desc:"Европейская олимпиада по физике.", fee:"Бесплатно" },
+    { name:"Олимпиада по физике (Узбекистан)", country:"Узбекистан", level:"Республиканский", when:"Март", desc:"Национальная олимпиада Узбекистана.", fee:"Бесплатно" },
+    { name:"Пакистанская олимпиада по физике (PPhO)", country:"Пакистан", level:"Международный", when:"Февраль", desc:"Отбор в сборную для IPhO.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по физике (TPhO)", country:"Турция", level:"Международный", when:"Март", desc:"Сложнейшие экспериментальные задачи.", fee:"Бесплатно" },
+    { name:"Бразильская олимпиада по физике (OBPh)", country:"Бразилия", level:"Международный", when:"Октябрь", desc:"Крупнейшая олимпиада по физике в Латинской Америке.", fee:"Бесплатно" },
+    { name:"African Physics Olympiad (AfPhO)", country:"Африка", level:"Международный", when:"Июль", desc:"Физическая олимпиада для африканских стран.", fee:"Бесплатно" },
+    { name:"Gulf Physics Olympiad", country:"Персидский залив", level:"Международный", when:"Апрель", desc:"Физическая олимпиада стран Персидского залива.", fee:"Бесплатно" },
+    { name:"Nordic Physics Olympiad", country:"Скандинавия", level:"Международный", when:"Март", desc:"Физическая олимпиада скандинавских стран.", fee:"Бесплатно" },
+    { name:"Balkan Physics Olympiad", country:"Балканы", level:"Международный", when:"Июнь", desc:"Физическая олимпиада Балканских стран.", fee:"Бесплатно" },
+    { name:"Олимпиада Фейнмана", country:"Международная", level:"Международный", when:"Декабрь", desc:"Независимая олимпиада по физике.", fee:"Бесплатно" }
+  ],
+  "Химия": [
+    { name:"International Chemistry Olympiad (IChO)", country:"Международная", level:"Международный", when:"Июль", desc:"Главная олимпиада по химии. Теория и эксперимент.", fee:"Бесплатно" },
+    { name:"Европейская олимпиада по химии (EChO)", country:"Европа", level:"Международный", when:"Июнь", desc:"Задачи на органику, неорганику и аналитику.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по химии (TChO)", country:"Турция", level:"Международный", when:"Март", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Республиканская олимпиада по химии (Таджикистан)", country:"Таджикистан", level:"Республиканский", when:"Апрель", desc:"Национальная олимпиада Таджикистана.", fee:"Бесплатно" },
+    { name:"Иранская олимпиада по химии", country:"Иран", level:"Международный", when:"Февраль", desc:"Одна из сильнейших в Азии.", fee:"Бесплатно" },
+    { name:"Арабская олимпиада по химии", country:"Арабские страны", level:"Международный", when:"Ноябрь", desc:"Для арабских стран.", fee:"Бесплатно" },
+    { name:"Бразильская олимпиада по химии (OQB)", country:"Бразилия", level:"Международный", when:"Октябрь", desc:"Крупнейшая в Латинской Америке.", fee:"Бесплатно" }
+  ],
+  "Биология": [
+    { name:"International Biology Olympiad (IBO)", country:"Международная", level:"Международный", when:"Июль", desc:"Главная олимпиада по биологии. Теория и практика.", fee:"Бесплатно" },
+    { name:"Европейская олимпиада по биологии (EBO)", country:"Европа", level:"Международный", when:"Июнь", desc:"Европейская олимпиада для старшеклассников.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по биологии (TBO)", country:"Турция", level:"Международный", when:"Апрель", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Иранская олимпиада по биологии", country:"Иран", level:"Международный", when:"Март", desc:"Одна из сильнейших в Азии.", fee:"Бесплатно" },
+    { name:"Пакистанская олимпиада по биологии (PBO)", country:"Пакистан", level:"Международный", when:"Февраль", desc:"Национальная олимпиада Пакистана.", fee:"Бесплатно" },
+    { name:"Корейская олимпиада по биологии (KBO)", country:"Южная Корея", level:"Международный", when:"Октябрь", desc:"Национальная олимпиада Южной Кореи.", fee:"Бесплатно" }
+  ],
+  "Астрономия": [
+    { name:"International Olympiad on Astronomy and Astrophysics (IOAA)", country:"Международная", level:"Международный", when:"Ноябрь", desc:"Главная олимпиада по астрономии и астрофизике.", fee:"Бесплатно" },
+    { name:"Европейская олимпиада по астрономии (EOA)", country:"Европа", level:"Международный", when:"Сентябрь", desc:"Европейская олимпиада по астрофизике.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по астрономии (TAO)", country:"Турция", level:"Международный", when:"Март", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Иранская олимпиада по астрономии", country:"Иран", level:"Международный", when:"Февраль", desc:"Национальная олимпиада Ирана.", fee:"Бесплатно" },
+    { name:"Корейская олимпиада по астрономии (KAO)", country:"Южная Корея", level:"Международный", when:"Ноябрь", desc:"Национальная олимпиада Южной Кореи.", fee:"Бесплатно" }
+  ],
+  "География": [
+    { name:"International Geography Olympiad (iGeo)", country:"Международная", level:"Международный", when:"Август", desc:"Задачи на картографию и ГИС.", fee:"Бесплатно" },
+    { name:"Европейская олимпиада по географии (EGeO)", country:"Европа", level:"Международный", when:"Июль", desc:"Европейская олимпиада по географии.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по географии (TGeO)", country:"Турция", level:"Международный", when:"Апрель", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Олимпиада по географии (Узбекистан)", country:"Узбекистан", level:"Республиканский", when:"Март", desc:"Национальная олимпиада Узбекистана.", fee:"Бесплатно" },
+    { name:"Корейская олимпиада по географии (KGeO)", country:"Южная Корея", level:"Международный", when:"Октябрь", desc:"Национальная олимпиада Южной Кореи.", fee:"Бесплатно" }
+  ],
+  "Лингвистика": [
+    { name:"International Linguistics Olympiad (IOL)", country:"Международная", level:"Международный", when:"Август", desc:"Задачи на языковые структуры и грамматику.", fee:"Бесплатно" },
+    { name:"Балтийская олимпиада по лингвистике (BALtO)", country:"Балтия", level:"Международный", when:"Январь", desc:"Для стран Балтии и Скандинавии.", fee:"Бесплатно" },
+    { name:"Всероссийская олимпиада по лингвистике", country:"Россия", level:"Республиканский", when:"Ноябрь", desc:"Крупнейшая в России.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по лингвистике", country:"Турция", level:"Международный", when:"Март", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Таджикская олимпиада по лингвистике", country:"Таджикистан", level:"Республиканский", when:"Апрель", desc:"Задачи на таджикский, русский и английский языки.", fee:"Бесплатно" },
+    { name:"Олимпиада по тюркским языкам", country:"Тюркские страны", level:"Международный", when:"Сентябрь", desc:"Олимпиада по тюркским языкам.", fee:"Бесплатно" }
+  ],
+  "Экономика": [
+    { name:"International Economics Olympiad (IEcoO)", country:"Международная", level:"Международный", when:"Июнь", desc:"Задачи на микро- и макроэкономику.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по экономике", country:"Турция", level:"Международный", when:"Май", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Казахстанская олимпиада по экономике", country:"Казахстан", level:"Республиканский", when:"Апрель", desc:"Национальная олимпиада Казахстана.", fee:"Бесплатно" },
+    { name:"Узбекская олимпиада по экономике", country:"Узбекистан", level:"Республиканский", when:"Март", desc:"Национальная олимпиада Узбекистана.", fee:"Бесплатно" }
+  ],
+  "Философия": [
+    { name:"International Philosophy Olympiad (IPO)", country:"Международная", level:"Международный", when:"Май", desc:"Эссе и аргументация.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по философии", country:"Турция", level:"Международный", when:"Март", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Бразильская олимпиада по философии", country:"Бразилия", level:"Международный", when:"Июнь", desc:"Национальная олимпиада Бразилии.", fee:"Бесплатно" }
+  ],
+  "Робототехника": [
+    { name:"FIRST Robotics Competition", country:"США", level:"Международный", when:"Март", desc:"Крупнейшее соревнование по робототехнике.", fee:"Бесплатно" },
+    { name:"World Robot Olympiad (WRO)", country:"Международная", level:"Международный", when:"Ноябрь", desc:"Международные олимпиадные игры.", fee:"Бесплатно" },
+    { name:"VEX Robotics World Championship", country:"США", level:"Международный", when:"Апрель", desc:"Чемпионат мира по робототехнике VEX.", fee:"Бесплатно" },
+    { name:"FIRST LEGO League", country:"Международная", level:"Школьный", when:"Декабрь", desc:"Робототехника с LEGO для младших школьников.", fee:"Бесплатно" },
+    { name:"Олимпиада по робототехнике (Казахстан)", country:"Казахстан", level:"Республиканский", when:"Май", desc:"Национальная олимпиада Казахстана.", fee:"Бесплатно" },
+    { name:"Олимпиада по робототехнике (Узбекистан)", country:"Узбекистан", level:"Республиканский", when:"Апрель", desc:"Национальная олимпиада Узбекистана.", fee:"Бесплатно" }
+  ],
+  "ИИ и\Data Science": [
+    { name:"International Olympiad on AI (IOAI)", country:"Международная", level:"Международный", when:"Август", desc:"Машинное обучение и нейронные сети.", fee:"Бесплатно" },
+    { name:"AI Olympiad (Корея)", country:"Южная Корея", level:"Международный", when:"Сентябрь", desc:"Национальная олимпиада Южной Кореи.", fee:"Бесплатно" },
+    { name:"AI Olympiad (Китай)", country:"Китай", level:"Международный", when:"Ноябрь", desc:"Национальная олимпиада Китая.", fee:"Бесплатно" }
+  ],
+  "Кибербезопасность": [
+    { name:"International Cyber Security Olympiad (ICSO)", country:"Международная", level:"Международный", when:"Июль", desc:"Задачи на взлом и защиту.", fee:"Бесплатно" },
+    { name:"PicoCTF", country:"США", level:"Международный", when:"Март", desc:"Крупнейшее соревнование по кибербезопасности.", fee:"Бесплатно" }
+  ],
+  "Наука": [
+    { name:"International Science Olympiad (ISO)", country:"Международная", level:"Международный", when:"Июль", desc:"Междисциплинарная олимпиада.", fee:"Бесплатно" },
+    { name:"International Earth Science Olympiad (IESO)", country:"Международная", level:"Международный", when:"Сентябрь", desc:"Олимпиада по наукам о Земле.", fee:"Бесплатно" },
+    { name:"International Junior Science Olympiad (IJSO)", country:"Международная", level:"Школьный", when:"Декабрь", desc:"Для младших школьников.", fee:"Бесплатно" },
+    { name:"CERN Beamline for Schools", country:"Швейцария", level:"Международный", when:"Октябрь", desc:"Эксперименты на ускорителе в ЦЕРНе.", fee:"Бесплатно" },
+    { name:"International Environmental Olympiad (IEO)", country:"Международная", level:"Международный", when:"Июнь", desc:"Экология и устойчивое развитие.", fee:"Бесплатно" },
+    { name:"Турецкая олимпиада по экологии", country:"Турция", level:"Международный", when:"Май", desc:"Национальная олимпиада Турции.", fee:"Бесплатно" },
+    { name:"Казахстанская олимпиада по экологии", country:"Казахстан", level:"Республиканский", when:"Апрель", desc:"Национальная олимпиада Казахстана.", fee:"Бесплатно" },
+    { name:"International Environmental Project Olympiad (INEPO)", country:"Международная", level:"Международный", when:"Май", desc:"Олимпиада экологических проектов.", fee:"Бесплатно" },
+    { name:"International Olympiad in Human Physiology", country:"Международная", level:"Международный", when:"Ноябрь", desc:"Физиология человека.", fee:"Бесплатно" }
+  ],
+  "Космос": [
+    { name:"NASA Space Apps Challenge", country:"США", level:"Международный", when:"Октябрь", desc:"Глобальный хакатон NASA.", fee:"Бесплатно" },
+    { name:"Space Generation Congress", country:"Международная", level:"Международный", when:"Сентябрь", desc:"Конгресс молодых специалистов по космосу.", fee:"Бесплатно" }
+  ],
+  "История и культура": [
+    { name:"International History Olympiad (iHO)", country:"Международная", level:"Международный", when:"Июль", desc:"Международная олимпиада по истории.", fee:"Бесплатно" },
+    { name:"World Scholar's Cup", country:"Международная", level:"Международный", when:"Апрель", desc:"Дебаты, эссе и знания.", fee:"Бесплатно" },
+    { name:"International Young Writers Award", country:"Международная", level:"Международный", when:"Декабрь", desc:"Премия для молодых писателей.", fee:"Бесплатно" },
+    { name:"International Youth Music Competition", country:"Международная", level:"Международный", when:"Июнь", desc:"Музыкальный конкурс.", fee:"Бесплатно" },
+    { name:"International Young Chef Olympiad", country:"Индия", level:"Международный", when:"Февраль", desc:"Для молодых поваров.", fee:"Бесплатно" },
+    { name:"Red Dot Design Award", country:"Германия", level:"Международный", when:"Июнь", desc:"Конкурс дизайн-концепций.", fee:"Бесплатно" },
+    { name:"International Architecture Olympiad", country:"Международная", level:"Международный", when:"Июнь", desc:"По архитектуре и дизайну.", fee:"Бесплатно" },
+    { name:"Global Enterprise Challenge", country:"Международная", level:"Международный", when:"Ноябрь", desc:"Предпринимательское соревнование.", fee:"Бесплатно" }
+  ],
+  "Междисциплинарные": [
+    { name:"ASEAN Science Olympiad", country:"Юго-Восточная Азия", level:"Международный", when:"Июль", desc:"Научная олимпиада стран АСЕАН.", fee:"Бесплатно" }
+  ]
+};
+
+const COUNTRIES = ["Все","Таджикистан","Россия","Казахстан","Узбекистан","Турция","Иран","Китай","Япония","Южная Корея","США","Канада","Австралия","Бразилия","Европа","СНГ","Арабские страны","Африка","Азия","Международная"];
+const LEVELS = [{key:"все",label:"Все"},{key:"Школьный",label:"Школьный"},{key:"Республиканский",label:"Республиканский"},{key:"Международный",label:"Международный"}];
+
+const chipsEl = document.getElementById("chips");
+const countryRow = document.getElementById("countryRow");
+const levelRow = document.getElementById("levelRow");
+const findBtn = document.getElementById("findBtn");
+const resultsInner = document.getElementById("resultsInner");
+
+const selectedSubjects = new Set();
+let selectedCountry = "Все";
+let selectedLevel = "все";
+
+Object.keys(DATA).forEach(subject => {
+  const chip = document.createElement("button");
+  chip.className = "chip";
+  chip.textContent = subject;
+  chip.addEventListener("click", () => {
+    chip.classList.toggle("selected");
+    if (selectedSubjects.has(subject)) selectedSubjects.delete(subject);
+    else selectedSubjects.add(subject);
+    findBtn.disabled = selectedSubjects.size === 0;
+  });
+  chipsEl.appendChild(chip);
+});
+
+COUNTRIES.forEach((c, i) => {
+  const pill = document.createElement("button");
+  pill.className = "pill" + (i === 0 ? " selected" : "");
+  pill.textContent = c;
+  pill.addEventListener("click", () => {
+    countryRow.querySelectorAll(".pill").forEach(p => p.classList.remove("selected"));
+    pill.classList.add("selected");
+    selectedCountry = c;
+  });
+  countryRow.appendChild(pill);
+});
+
+LEVELS.forEach((l, i) => {
+  const pill = document.createElement("button");
+  pill.className = "pill" + (i === 0 ? " selected" : "");
+  pill.textContent = l.label;
+  pill.addEventListener("click", () => {
+    levelRow.querySelectorAll(".pill").forEach(p => p.classList.remove("selected"));
+    pill.classList.add("selected");
+    selectedLevel = l.key;
+  });
+  levelRow.appendChild(pill);
+});
+
+findBtn.addEventListener("click", () => {
+  resultsInner.innerHTML = "";
+  if (selectedSubjects.size === 0) {
+    resultsInner.innerHTML = '<div class="results-empty"><i class="bi bi-trophy"></i>Выбери хотя бы один предмет.</div>';
+    return;
+  }
+  let anyShown = false;
+  let delay = 0;
+
+  selectedSubjects.forEach(subject => {
+    const items = DATA[subject].filter(o => {
+      const levelOk = selectedLevel === "все" || o.level === selectedLevel;
+      const countryOk = selectedCountry === "Все" || o.country === selectedCountry;
+      return levelOk && countryOk;
+    });
+    if (items.length === 0) return;
+    anyShown = true;
+
+    const group = document.createElement("div");
+    group.className = "subject-group";
+    group.style.animationDelay = delay + "s";
+    delay += 0.08;
+
+    const heading = document.createElement("h3");
+    heading.innerHTML = subject + ' <span class="count">' + items.length + '</span>';
+    group.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "card-grid";
+
+    items.forEach(o => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="badges">
+          <span class="badge"><i class="bi bi-bar-chart"></i> ${o.level}</span>
+          <span class="badge country"><i class="bi bi-geo-alt"></i> ${o.country}</span>
+        </div>
+        <h4>${o.name}</h4>
+        <p>${o.desc}</p>
+        <div class="meta">
+          <span><i class="bi bi-calendar-event"></i><b>Когда:</b> ${o.when}</span>
+          <span><i class="bi bi-wallet2"></i><b>Стоимость:</b> ${o.fee}</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    group.appendChild(grid);
+    resultsInner.appendChild(group);
+  });
+
+  if (!anyShown) {
+    resultsInner.innerHTML = '<div class="results-empty"><i class="bi bi-search"></i>По этому сочетанию фильтров пока ничего нет — попробуй выбрать «Все» по стране или уровню.</div>';
+  }
+
+  document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+</script>
+
+</body>
+</html>
