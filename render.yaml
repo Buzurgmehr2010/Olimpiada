@@ -3,8 +3,9 @@ services:
     name: olympiada
     runtime: php
     plan: free
-    buildCommand: composer install --no-dev --no-interaction --prefer-dist && touch database/database.sqlite && php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache
+    buildCommand: composer install --no-dev --no-interaction --prefer-dist
     startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    preDeployCommand: touch database/database.sqlite && php artisan migrate --force && php artisan db:seed --force
     envVars:
       - key: APP_NAME
         value: Olympiada
@@ -12,8 +13,6 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
-      - key: APP_URL
-        value: https://olympiada.onrender.com
       - key: APP_KEY
         generateValue: true
       - key: DB_CONNECTION
