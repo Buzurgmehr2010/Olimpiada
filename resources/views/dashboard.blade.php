@@ -78,7 +78,7 @@
                     $total = array_sum($countriesData);
                     $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
                     $radius = 70;
-                    $circumference = 2 * pi($radius);
+                    $circumference = 2 * M_PI * $radius;
                     $offset = 0;
                     $items = [];
                     foreach($countriesData as $country => $count) {
@@ -138,7 +138,7 @@
                     $totalLevels = array_sum($levelsData);
                     $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
                     $radiusL = 70;
-                    $circumferenceL = 2 * pi($radiusL);
+                    $circumferenceL = 2 * M_PI * $radiusL;
                     $levelItems = [];
                     foreach($levelsData as $level => $count) {
                         $percent = $totalLevels > 0 ? $count / $totalLevels : 0;
