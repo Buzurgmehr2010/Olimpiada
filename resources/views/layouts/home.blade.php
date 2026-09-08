@@ -244,6 +244,20 @@
 
         .footer-bottom a { color: var(--primary); text-decoration: none; }
 
+        /* Scroll to top */
+        .scroll-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 48px; height: 48px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.35);
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.3s ease; z-index: 90; pointer-events: none;
+        }
+        .scroll-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.45); }
+
         @media (max-width: 992px) {
             .footer-grid { grid-template-columns: 1fr 1fr; }
         }
@@ -365,6 +379,8 @@
         @endauth
     </div>
 
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-chevron-up"></i></button>
+
     @yield('content')
 
     <footer>
@@ -430,13 +446,16 @@
 
             document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-            // Header scroll effect
-            let header = document.querySelector('header');
+            // Scroll to top
+            const scrollTop = document.getElementById('scrollTop');
             window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
                 if (window.scrollY > 100) {
                     header.classList.add('scrolled');
+                    scrollTop.classList.add('visible');
                 } else {
                     header.classList.remove('scrolled');
+                    scrollTop.classList.remove('visible');
                 }
             });
         });
