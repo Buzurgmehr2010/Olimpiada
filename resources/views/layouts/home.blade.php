@@ -102,39 +102,53 @@
 
         .nav-links { display: flex; gap: 6px; align-items: center; }
         .nav-link {
-            text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 0.92rem;
-            padding: 8px 16px; border-radius: 10px; transition: var(--transition); position: relative;
+            text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 0.88rem;
+            padding: 8px 18px; border-radius: 10px; transition: var(--transition); position: relative;
         }
         .nav-link:hover { color: var(--primary); background: rgba(var(--primary-rgb), 0.06); }
-        .nav-link.active { color: var(--primary); background: rgba(var(--primary-rgb), 0.1); }
+        .nav-link.active { color: var(--primary); background: rgba(var(--primary-rgb), 0.1); font-weight: 600; }
 
         .theme-btn {
-            display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 10px;
+            display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 12px;
             background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary);
             font-size: 1.1rem; cursor: pointer; transition: var(--transition); text-decoration: none;
         }
-        .theme-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary-rgb), 0.06); }
+        .theme-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary-rgb), 0.06); transform: scale(1.05); }
 
         .auth-btn {
-            padding: 9px 22px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+            padding: 9px 22px; border-radius: 12px; font-weight: 600; font-size: 0.88rem;
             text-decoration: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+            border: none; cursor: pointer; font-family: 'Inter', sans-serif;
         }
-        .auth-btn-login { color: var(--text-secondary); border: 1px solid var(--border); background: var(--bg-card); }
-        .auth-btn-login:hover { border-color: var(--primary); color: var(--primary); }
+        .auth-btn-login {
+            color: var(--text-secondary); background: var(--bg-card);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .auth-btn-login:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15); transform: translateY(-1px); }
         .auth-btn-register {
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+            color: white; box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.35);
+            font-weight: 700;
         }
-        .auth-btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.4); }
+        .auth-btn-register:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.45); }
         .auth-btn-logout {
             color: var(--text-secondary); border: 1px solid var(--border); background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            padding: 9px 14px;
         }
-        .auth-btn-logout:hover { border-color: var(--primary); color: var(--primary); }
+        .auth-btn-logout:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15); transform: translateY(-1px); }
 
         .auth-btn-name {
             color: var(--text-secondary); border: 1px solid var(--border); background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
+            padding: 9px 18px;
         }
-        .auth-btn-name:hover { border-color: var(--primary); color: var(--primary); }
+        .auth-btn-name:hover { border-color: var(--primary); color: var(--primary); box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15); transform: translateY(-1px); }
+
+        .header-actions { display: flex; align-items: center; gap: 8px; margin-left: 16px; }
+        .header-divider { width: 1px; height: 28px; background: var(--border); margin: 0 4px; }
 
         /* Mobile */
         .mobile-toggle { display: none; background: none; border: none; color: var(--text-heading); font-size: 1.5rem; cursor: pointer; padding: 8px; }
@@ -146,8 +160,29 @@
         .mobile-menu.open { display: flex; }
         .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
         .mobile-close { background: none; border: none; color: var(--text-heading); font-size: 1.5rem; cursor: pointer; padding: 8px; }
-        .mobile-menu .nav-link { display: block; padding: 14px 16px; font-size: 1.1rem; border-bottom: 1px solid var(--border); border-radius: 0; }
-        .mobile-menu .auth-btn { display: block; text-align: center; margin-top: 12px; padding: 14px; font-size: 1rem; }
+        .mobile-menu .nav-link { display: block; padding: 14px 16px; font-size: 1.05rem; border-bottom: 1px solid var(--border); border-radius: 0; display: flex; align-items: center; gap: 12px; }
+        .mobile-menu .auth-btn { display: block; text-align: center; margin-top: 12px; padding: 14px; font-size: 1rem; border-radius: 12px; }
+
+        /* Header improvements */
+        header {
+            background: var(--bg-header);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+        header.scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
 
         /* Footer */
         footer {
@@ -257,11 +292,13 @@
                 <div class="logo-text">Olympiada<span>.</span></div>
             </a>
             <nav class="nav-links">
-                <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Главная</a>
-                <a href="/about" class="nav-link {{ request()->is('about') ? 'active' : '' }}">О нас</a>
-                <a href="/olympiads" class="nav-link {{ request()->is('olympiads') ? 'active' : '' }}">Олимпиады</a>
-                <a href="/contact" class="nav-link {{ request()->is('contact') ? 'active' : '' }}">Контакты</a>
-                <a href="/faq" class="nav-link {{ request()->is('faq') ? 'active' : '' }}">FAQ</a>
+                <a href="/" class="nav-link {{ request()->is('/') ? 'active' : '' }}"><i class="bi bi-house-door"></i> Главная</a>
+                <a href="/about" class="nav-link {{ request()->is('about') ? 'active' : '' }}"><i class="bi bi-book"></i> О нас</a>
+                <a href="/olympiads" class="nav-link {{ request()->is('olympiads') ? 'active' : '' }}"><i class="bi bi-trophy"></i> Олимпиады</a>
+                <a href="/contact" class="nav-link {{ request()->is('contact') ? 'active' : '' }}"><i class="bi bi-envelope"></i> Контакты</a>
+                <a href="/faq" class="nav-link {{ request()->is('faq') ? 'active' : '' }}"><i class="bi bi-question-circle"></i> FAQ</a>
+            </nav>
+            <div class="header-actions">
                 <form action="{{ route('toggle-theme') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="theme-btn" title="Сменить тему">
@@ -272,17 +309,18 @@
                         @endif
                     </button>
                 </form>
+                <div class="header-divider"></div>
                 @auth
                     <a href="{{ route('profile.edit') }}" class="auth-btn auth-btn-name"><i class="bi bi-person-circle"></i> {{ Auth::user()->name }}</a>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="auth-btn auth-btn-logout"><i class="bi bi-box-arrow-right"></i></button>
+                        <button type="submit" class="auth-btn auth-btn-logout" title="Выйти"><i class="bi bi-box-arrow-right"></i></button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="auth-btn auth-btn-login">Войти</a>
                     <a href="{{ route('register') }}" class="auth-btn auth-btn-register">Начать</a>
                 @endauth
-            </nav>
+            </div>
             <button @click="mobileOpen = true" class="mobile-toggle">
                 <i class="bi bi-list"></i>
             </button>
@@ -300,11 +338,11 @@
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-        <a href="/" class="nav-link" @click="mobileOpen = false">Главная</a>
-        <a href="/about" class="nav-link" @click="mobileOpen = false">О нас</a>
-        <a href="/olympiads" class="nav-link" @click="mobileOpen = false">Олимпиады</a>
-        <a href="/contact" class="nav-link" @click="mobileOpen = false">Контакты</a>
-        <a href="/faq" class="nav-link" @click="mobileOpen = false">FAQ</a>
+        <a href="/" class="nav-link" @click="mobileOpen = false" style="gap:12px;"><i class="bi bi-house-door"></i> Главная</a>
+        <a href="/about" class="nav-link" @click="mobileOpen = false" style="gap:12px;"><i class="bi bi-book"></i> О нас</a>
+        <a href="/olympiads" class="nav-link" @click="mobileOpen = false" style="gap:12px;"><i class="bi bi-trophy"></i> Олимпиады</a>
+        <a href="/contact" class="nav-link" @click="mobileOpen = false" style="gap:12px;"><i class="bi bi-envelope"></i> Контакты</a>
+        <a href="/faq" class="nav-link" @click="mobileOpen = false" style="gap:12px;"><i class="bi bi-question-circle"></i> FAQ</a>
         <form action="{{ route('toggle-theme') }}" method="POST">
             @csrf
             <button type="submit" class="nav-link" style="border:none; background:none; width:100%; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px;">
@@ -316,14 +354,14 @@
             </button>
         </form>
         @auth
-            <a href="{{ route('profile.edit') }}" class="auth-btn auth-btn-name" @click="mobileOpen = false" style="margin-top:12px;"><i class="bi bi-person-circle"></i> {{ Auth::user()->name }}</a>
+            <a href="{{ route('profile.edit') }}" class="auth-btn auth-btn-name" @click="mobileOpen = false" style="margin-top:12px; gap:10px; justify-content:center;"><i class="bi bi-person-circle"></i> {{ Auth::user()->name }}</a>
             <form action="{{ route('logout') }}" method="POST" style="margin-top: 12px;">
                 @csrf
-                <button type="submit" class="auth-btn auth-btn-logout" style="width:100%; text-align:center; padding:14px; font-size:1rem; border: 1px solid var(--border);"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+                <button type="submit" class="auth-btn auth-btn-logout" style="width:100%; text-align:center; padding:14px; font-size:1rem; border: 1px solid var(--border); gap:10px; justify-content:center;"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </form>
         @else
-            <a href="{{ route('login') }}" class="auth-btn auth-btn-login" style="text-align:center;" @click="mobileOpen = false">Войти</a>
-            <a href="{{ route('register') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false">Регистрация</a>
+            <a href="{{ route('login') }}" class="auth-btn auth-btn-login" style="text-align:center;" @click="mobileOpen = false"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
+            <a href="{{ route('register') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false"><i class="bi bi-rocket-takeoff"></i> Начать</a>
         @endauth
     </div>
 
@@ -393,16 +431,13 @@
             document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
             // Header scroll effect
-            let lastScroll = 0;
+            let header = document.querySelector('header');
             window.addEventListener('scroll', () => {
-                const header = document.querySelector('header');
-                const scrollY = window.scrollY;
-                if (scrollY > 100) {
-                    header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
                 } else {
-                    header.style.boxShadow = 'none';
+                    header.classList.remove('scrolled');
                 }
-                lastScroll = scrollY;
             });
         });
     </script>
