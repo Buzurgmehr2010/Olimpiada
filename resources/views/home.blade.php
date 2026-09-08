@@ -259,59 +259,133 @@
         <div class="section-header reveal">
             <div class="section-badge"><i class="bi bi-tag"></i> Тарифы</div>
             <h2 class="section-title">Прозрачные <span class="text-gradient">цены</span></h2>
-            <p class="section-desc">Начните бесплатно, обновите по мере роста</p>
+            <p class="section-desc">Выберите план, который подходит вам. Масштабируйтесь по мере роста</p>
+        </div>
+
+        <!-- Toggle -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 48px;" class="pricing-toggle reveal">
+            <button class="pricing-toggle-btn active" id="toggleMonthly" onclick="switchPricing('monthly')">Ежемесячный</button>
+            <button class="pricing-toggle-btn" id="toggleYearly" onclick="switchPricing('yearly')">
+                Годовой <span style="background: rgba(16,185,129,0.1); color: #10b981; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-left: 4px;">-20%</span>
+            </button>
         </div>
 
         <div class="pricing-grid">
+            <!-- Базовый -->
             <div class="pricing-card reveal">
                 <div class="pricing-header">
                     <h3>Базовый</h3>
-                    <div class="pricing-price">Бесплатно</div>
+                    <div class="pricing-price">
+                        <span class="price-monthly">₽0</span>
+                        <span class="price-yearly" style="display:none;">₽0</span>
+                    </div>
                     <p>Для начала пути</p>
                 </div>
                 <ul class="pricing-features">
                     <li><i class="bi bi-check-circle-fill"></i> Доступ ко всем олимпиадам</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Умный поиск</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Уведомления</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Базовая аналитика</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Умный поиск и фильтры</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Базовые уведомления</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Профиль и личный кабинет</li>
+                    <li style="color: #ccc;"><i class="bi bi-x-circle-fill"></i> Расширенная аналитика</li>
+                    <li style="color: #ccc;"><i class="bi bi-x-circle-fill"></i> Сертификаты</li>
+                    <li style="color: #ccc;"><i class="bi bi-x-circle-fill"></i> Поддержка 24/7</li>
                 </ul>
                 <a href="/register" class="pricing-btn">Начать бесплатно</a>
             </div>
 
+            <!-- Про (популярный) -->
             <div class="pricing-card pricing-card-featured reveal">
-                <div class="pricing-badge">Популярный</div>
+                <div class="pricing-badge">⭐ Популярный</div>
                 <div class="pricing-header">
                     <h3>Про</h3>
-                    <div class="pricing-price">$9<span>/мес</span></div>
+                    <div class="pricing-price">
+                        <span class="price-monthly">₽990<span>/мес</span></span>
+                        <span class="price-yearly" style="display:none;">₽792<span>/мес</span></span>
+                    </div>
                     <p>Для серьёзных участников</p>
                 </div>
                 <ul class="pricing-features">
-                    <li><i class="bi bi-check-circle-fill"></i> Всё из тарифа "Базовый"</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Расширенная аналитика</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Всё из «Базовый»</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Расширенная аналитика и статистика</li>
                     <li><i class="bi bi-check-circle-fill"></i> Приоритетная поддержка</li>
                     <li><i class="bi bi-check-circle-fill"></i> Эксклюзивные олимпиады</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Сертификаты</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Сертификаты участника</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Подготовка к олимпиадам</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Облачное хранилище результатов</li>
                 </ul>
                 <a href="/register" class="pricing-btn pricing-btn-featured">Выбрать Про</a>
             </div>
 
+            <!-- Команда -->
             <div class="pricing-card reveal">
+                <div class="pricing-badge" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">Для организаций</div>
                 <div class="pricing-header">
                     <h3>Команда</h3>
-                    <div class="pricing-price">$29<span>/мес</span></div>
-                    <p>Для школ и организаций</p>
+                    <div class="pricing-price">
+                        <span class="price-monthly">₽2990<span>/мес</span></span>
+                        <span class="price-yearly" style="display:none;">₽2392<span>/мес</span></span>
+                    </div>
+                    <p>Для школ и образовательных учреждений</p>
                 </div>
                 <ul class="pricing-features">
-                    <li><i class="bi bi-check-circle-fill"></i> Всё из тарифа "Про"</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Всё из «Про»</li>
                     <li><i class="bi bi-check-circle-fill"></i> До 50 учеников</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Панель управления</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Панель управления командой</li>
                     <li><i class="bi bi-check-circle-fill"></i> API доступ</li>
                     <li><i class="bi bi-check-circle-fill"></i> Выделенный менеджер</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Кастомные олимпиады</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Отчёты и аналитика</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Интеграция с LMS</li>
                 </ul>
-                <a href="/register" class="pricing-btn">Связаться</a>
+                <a href="/contact" class="pricing-btn">Связаться</a>
+            </div>
+        </div>
+
+        <!-- Trust bar -->
+        <div style="text-align: center; margin-top: 48px;" class="reveal">
+            <div style="display: inline-flex; align-items: center; gap: 32px; padding: 24px 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; flex-wrap: wrap; justify-content: center;">
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="bi bi-shield-check" style="color: #10b981; font-size: 1.2rem;"></i>
+                    <span>Безопасные платежи</span>
+                </div>
+                <div style="width: 1px; height: 24px; background: var(--border);"></div>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="bi bi-rotate-counterclockwise" style="color: #6366f1; font-size: 1.2rem;"></i>
+                    <span>Отмена в любое время</span>
+                </div>
+                <div style="width: 1px; height: 24px; background: var(--border);"></div>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="bi bi-cash-coin" style="color: #10b981; font-size: 1.2rem;"></i>
+                    <span>Гарантия возврата 30 дней</span>
+                </div>
+                <div style="width: 1px; height: 24px; background: var(--border);"></div>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="bi bi-headset" style="color: #6366f1; font-size: 1.2rem;"></i>
+                    <span>Поддержка 24/7</span>
+                </div>
             </div>
         </div>
     </div>
+    <script>
+        function switchPricing(type) {
+            const monthlyEls = document.querySelectorAll('.price-monthly');
+            const yearlyEls = document.querySelectorAll('.price-yearly');
+            const monthlyBtn = document.getElementById('toggleMonthly');
+            const yearlyBtn = document.getElementById('toggleYearly');
+
+            if (type === 'yearly') {
+                monthlyEls.forEach(el => el.style.display = 'none');
+                yearlyEls.forEach(el => el.style.display = 'inline');
+                yearlyBtn.classList.add('active');
+                monthlyBtn.classList.remove('active');
+            } else {
+                monthlyEls.forEach(el => el.style.display = 'inline');
+                yearlyEls.forEach(el => el.style.display = 'none');
+                monthlyBtn.classList.add('active');
+                yearlyBtn.classList.remove('active');
+            }
+        }
+    </script>
 </section>
 
 <!-- CTA -->
@@ -626,7 +700,9 @@
     .pricing-features { list-style: none; margin-bottom: 32px; }
     .pricing-features li { display: flex; align-items: center; gap: 10px; padding: 10px 0; color: var(--text-secondary); font-size: 0.92rem; border-bottom: 1px solid var(--border); }
     .pricing-features li:last-child { border-bottom: none; }
-    .pricing-features i { color: #10b981; font-size: 1rem; }
+    .pricing-features i { font-size: 1rem; }
+    .pricing-features .bi-check-circle-fill { color: #10b981; }
+    .pricing-features .bi-x-circle-fill { color: #d1d5db; }
     .pricing-btn {
         display: block; text-align: center; padding: 16px;
         border-radius: 14px; font-weight: 700; font-size: 1rem;
@@ -640,6 +716,27 @@
         box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
     }
     .pricing-btn-featured:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.4); }
+
+    /* Pricing Toggle */
+    .pricing-toggle { display: flex; justify-content: center; gap: 8px; margin-bottom: 48px; }
+    .pricing-toggle-btn {
+        padding: 10px 24px; border-radius: 12px; border: 2px solid var(--border);
+        background: var(--bg-body); color: var(--text-secondary); font-weight: 600;
+        font-size: 0.9rem; cursor: pointer; transition: all 0.3s;
+        font-family: 'Inter', sans-serif;
+    }
+    .pricing-toggle-btn.active {
+        background: linear-gradient(135deg, var(--primary), #8b5cf6);
+        color: white; border-color: transparent;
+        box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.3);
+    }
+    .pricing-toggle-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+    /* Trust bar */
+    .trust-bar { display: flex; align-items: center; gap: 32px; padding: 24px 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; flex-wrap: wrap; justify-content: center; }
+    .trust-item { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem; }
+    .trust-item i { font-size: 1.2rem; }
+    .trust-divider { width: 1px; height: 24px; background: var(--border); }
 
     /* CTA */
     .cta-section { padding: 120px 0; }
