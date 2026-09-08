@@ -127,9 +127,17 @@
         }
         .auth-btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.4); }
         .auth-btn-logout {
-            color: #ef4444; border: 1px solid rgba(239,68,68,0.2); background: rgba(239,68,68,0.05);
+            color: white; background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
         }
-        .auth-btn-logout:hover { background: #ef4444; color: white; border-color: #ef4444; }
+        .auth-btn-logout:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.5); }
+
+        .auth-btn-name {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white; box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+            font-weight: 700;
+        }
+        .auth-btn-name:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.5); }
 
         /* Mobile */
         .mobile-toggle { display: none; background: none; border: none; color: var(--text-heading); font-size: 1.5rem; cursor: pointer; padding: 8px; }
@@ -268,10 +276,10 @@
                     </button>
                 </form>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="auth-btn auth-btn-login"><i class="bi bi-grid-1x2"></i> Кабинет</a>
+                    <a href="{{ route('profile.edit') }}" class="auth-btn auth-btn-name"><i class="bi bi-person-circle"></i> {{ Auth::user()->name }}</a>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
-                        <button type="submit" class="auth-btn auth-btn-logout"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+                        <button type="submit" class="auth-btn auth-btn-logout"><i class="bi bi-box-arrow-right"></i></button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="auth-btn auth-btn-login">Войти</a>
@@ -311,10 +319,10 @@
             </button>
         </form>
         @auth
-            <a href="{{ route('dashboard') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false"><i class="bi bi-grid-1x2"></i> Кабинет</a>
+            <a href="{{ route('profile.edit') }}" class="auth-btn auth-btn-name" @click="mobileOpen = false" style="margin-top:12px;"><i class="bi bi-person-circle"></i> {{ Auth::user()->name }}</a>
             <form action="{{ route('logout') }}" method="POST" style="margin-top: 12px;">
                 @csrf
-                <button type="submit" class="auth-btn auth-btn-logout" style="width:100%; text-align:center; padding:14px; font-size:1rem;"><i class="bi bi-box-arrow-right"></i> Выйти из аккаунта</button>
+                <button type="submit" class="auth-btn auth-btn-logout" style="width:100%; text-align:center; padding:14px; font-size:1rem;"><i class="bi bi-box-arrow-right"></i> Выйти</button>
             </form>
         @else
             <a href="{{ route('login') }}" class="auth-btn auth-btn-login" style="text-align:center;" @click="mobileOpen = false">Войти</a>
