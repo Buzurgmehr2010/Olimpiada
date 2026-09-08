@@ -67,67 +67,119 @@
 
     <!-- Charts -->
     <div class="dash-charts-grid">
-        <!-- Countries -->
+        <!-- Countries Donut -->
         <div class="card">
             <div class="card-header">
                 <h2><i class="bi bi-pie-chart" style="margin-right: 8px; color: #6366f1;"></i>По странам</h2>
             </div>
             <div class="card-body">
                 @if(isset($countriesData) && count($countriesData) > 0)
-                <div class="dash-chart-bars">
-                    @php
-                        $maxCount = max($countriesData);
-                        $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
-                    @endphp
-                    @foreach($countriesData as $country => $count)
-                    <div class="dash-bar-item">
-                        <div class="dash-bar-label">{{ $country }}</div>
-                        <div class="dash-bar-track">
-                            <div class="dash-bar-fill" style="width: {{ ($count / $maxCount) * 100 }}%; background: {{ $colors[$loop->index % count($colors)] }};">
-                                <span>{{ $count }}</span>
-                            </div>
+                @php
+                    $total = array_sum($countriesData);
+                    $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
+                    $radius = 70;
+                    $circumference = 2 * pi($radius);
+                    $offset = 0;
+                    $items = [];
+                    foreach($countriesData as $country => $count) {
+                        $percent = $total > 0 ? $count / $total : 0;
+                        $items[] = ['country' => $country, 'count' => $count, 'percent' => $percent, 'color' => $colors[array_search($country, array_keys($countriesData)) % count($colors)]];
+                    }
+                @endphp
+                <div style="display: flex; align-items: center; gap: 32px;">
+                    <div style="flex-shrink: 0; position: relative;">
+                        <svg width="164" height="164" viewBox="0 0 164 164">
+                            <circle cx="82" cy="82" r="{{ $radius }}" fill="none" stroke="var(--bg-hover)" stroke-width="18"/>
+                            @php $offset = 0; @endphp
+                            @foreach($items as $item)
+                            <circle cx="82" cy="82" r="{{ $radius }}" fill="none"
+                                stroke="{{ $item['color'] }}" stroke-width="18"
+                                stroke-dasharray="{{ $circumference * $item['percent'] }} {{ $circumference * (1 - $item['percent']) }}"
+                                stroke-dashoffset="{{ -$offset }}"
+                                stroke-linecap="round"
+                                transform="rotate(-90 82 82)"
+                                style="transition: stroke-dasharray 1s ease;"/>
+                            @php $offset += $circumference * $item['percent']; @endphp
+                            @endforeach
+                        </svg>
+                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--text-heading);">{{ $total }}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">всего</span>
                         </div>
                     </div>
-                    @endforeach
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                        @foreach($items as $item)
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: {{ $item['color'] }}; flex-shrink: 0;"></div>
+                            <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['country'] }}</span>
+                            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">{{ $item['count'] }}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ round($item['percent'] * 100) }}%</span>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
                 @else
                 <div class="dash-empty-state">
-                    <i class="bi bi-bar-chart"></i>
+                    <i class="bi bi-pie-chart"></i>
                     <p>Нет данных</p>
                 </div>
                 @endif
             </div>
         </div>
 
-        <!-- Levels -->
+        <!-- Levels Donut -->
         <div class="card">
             <div class="card-header">
                 <h2><i class="bi bi-graph-up" style="margin-right: 8px; color: #8b5cf6;"></i>По уровням</h2>
             </div>
             <div class="card-body">
                 @if(isset($levelsData) && count($levelsData) > 0)
-                <div class="dash-levels-chart">
-                    @php
-                        $total = array_sum($levelsData);
-                        $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
-                    @endphp
-                    @foreach($levelsData as $level => $count)
-                    <div class="dash-level-row">
-                        <div class="dash-level-dot" style="background: {{ $levelColors[$loop->index % count($levelColors)] }};"></div>
-                        <div class="dash-level-info">
-                            <span class="dash-level-name">{{ $level }}</span>
-                            <span class="dash-level-count">{{ $count }} олимпиад</span>
+                @php
+                    $totalLevels = array_sum($levelsData);
+                    $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
+                    $radiusL = 70;
+                    $circumferenceL = 2 * pi($radiusL);
+                    $levelItems = [];
+                    foreach($levelsData as $level => $count) {
+                        $percent = $totalLevels > 0 ? $count / $totalLevels : 0;
+                        $levelItems[] = ['level' => $level, 'count' => $count, 'percent' => $percent, 'color' => $levelColors[array_search($level, array_keys($levelsData)) % count($levelColors)]];
+                    }
+                @endphp
+                <div style="display: flex; align-items: center; gap: 32px;">
+                    <div style="flex-shrink: 0; position: relative;">
+                        <svg width="164" height="164" viewBox="0 0 164 164">
+                            <circle cx="82" cy="82" r="{{ $radiusL }}" fill="none" stroke="var(--bg-hover)" stroke-width="18"/>
+                            @php $offsetL = 0; @endphp
+                            @foreach($levelItems as $item)
+                            <circle cx="82" cy="82" r="{{ $radiusL }}" fill="none"
+                                stroke="{{ $item['color'] }}" stroke-width="18"
+                                stroke-dasharray="{{ $circumferenceL * $item['percent'] }} {{ $circumferenceL * (1 - $item['percent']) }}"
+                                stroke-dashoffset="{{ -$offsetL }}"
+                                stroke-linecap="round"
+                                transform="rotate(-90 82 82)"
+                                style="transition: stroke-dasharray 1s ease;"/>
+                            @php $offsetL += $circumferenceL * $item['percent']; @endphp
+                            @endforeach
+                        </svg>
+                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--text-heading);">{{ $totalLevels }}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">всего</span>
                         </div>
-                        <div class="dash-level-bar-wrap">
-                            <div class="dash-level-bar" style="width: {{ $total > 0 ? ($count / $total) * 100 : 0 }}%; background: {{ $levelColors[$loop->index % count($levelColors)] }};"></div>
-                        </div>
-                        <div class="dash-level-percent">{{ $total > 0 ? round(($count / $total) * 100) : 0 }}%</div>
                     </div>
-                    @endforeach
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                        @foreach($levelItems as $item)
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: {{ $item['color'] }}; flex-shrink: 0;"></div>
+                            <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['level'] }}</span>
+                            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">{{ $item['count'] }}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ round($item['percent'] * 100) }}%</span>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
                 @else
                 <div class="dash-empty-state">
-                    <i class="bi bi-graph-up"></i>
+                    <i class="bi bi-pie-chart"></i>
                     <p>Нет данных</p>
                 </div>
                 @endif
@@ -264,23 +316,6 @@
     .dash-stat-trend-neutral { background: rgba(100,116,139,0.1); color: #64748b; }
 
     .dash-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
-
-    .dash-chart-bars { display: flex; flex-direction: column; gap: 12px; }
-    .dash-bar-item { display: flex; align-items: center; gap: 12px; }
-    .dash-bar-label { width: 80px; font-size: 0.82rem; font-weight: 600; color: var(--text-primary); flex-shrink: 0; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .dash-bar-track { flex: 1; height: 24px; background: var(--bg-hover); border-radius: 8px; overflow: hidden; }
-    .dash-bar-fill { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width 1.2s ease; min-width: 36px; }
-    .dash-bar-fill span { color: white; font-weight: 700; font-size: 0.78rem; }
-
-    .dash-levels-chart { display: flex; flex-direction: column; gap: 16px; }
-    .dash-level-row { display: flex; align-items: center; gap: 12px; }
-    .dash-level-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-    .dash-level-info { flex: 1; min-width: 0; }
-    .dash-level-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); display: block; }
-    .dash-level-count { font-size: 0.78rem; color: var(--text-secondary); }
-    .dash-level-bar-wrap { width: 80px; height: 8px; background: var(--bg-hover); border-radius: 4px; overflow: hidden; flex-shrink: 0; }
-    .dash-level-bar { height: 100%; border-radius: 4px; transition: width 1s ease; }
-    .dash-level-percent { font-size: 0.88rem; font-weight: 700; color: #6366f1; width: 40px; text-align: right; flex-shrink: 0; }
 
     .dash-quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
     .dash-quick-card {
