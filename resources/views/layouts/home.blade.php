@@ -109,23 +109,27 @@
         .nav-link.active { color: var(--primary); background: rgba(var(--primary-rgb), 0.1); }
 
         .theme-btn {
-            display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 10px;
+            display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 10px;
             background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary);
-            font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: var(--transition); text-decoration: none;
+            font-size: 1.1rem; cursor: pointer; transition: var(--transition); text-decoration: none;
         }
-        .theme-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .theme-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--primary-rgb), 0.06); }
 
         .auth-btn {
             padding: 9px 22px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
-            text-decoration: none; transition: var(--transition);
+            text-decoration: none; transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
         }
-        .auth-btn-login { color: var(--text-secondary); }
-        .auth-btn-login:hover { color: var(--primary); }
+        .auth-btn-login { color: var(--text-secondary); border: 1px solid var(--border); background: var(--bg-card); }
+        .auth-btn-login:hover { border-color: var(--primary); color: var(--primary); }
         .auth-btn-register {
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white; box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
         }
         .auth-btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.4); }
+        .auth-btn-logout {
+            color: #ef4444; border: 1px solid rgba(239,68,68,0.2); background: rgba(239,68,68,0.05);
+        }
+        .auth-btn-logout:hover { background: #ef4444; color: white; border-color: #ef4444; }
 
         /* Mobile */
         .mobile-toggle { display: none; background: none; border: none; color: var(--text-heading); font-size: 1.5rem; cursor: pointer; padding: 8px; }
@@ -255,16 +259,20 @@
                 <a href="/faq" class="nav-link {{ request()->is('faq') ? 'active' : '' }}">FAQ</a>
                 <form action="{{ route('toggle-theme') }}" method="POST" style="display: inline;">
                     @csrf
-                    <button type="submit" class="theme-btn">
+                    <button type="submit" class="theme-btn" title="Сменить тему">
                         @if($theme === 'dark')
-                            <i class="bi bi-sun"></i> Светлая
+                            <i class="bi bi-sun"></i>
                         @else
-                            <i class="bi bi-moon"></i> Тёмная
+                            <i class="bi bi-moon"></i>
                         @endif
                     </button>
                 </form>
                 @auth
                     <a href="{{ route('dashboard') }}" class="auth-btn auth-btn-login"><i class="bi bi-grid-1x2"></i> Кабинет</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="auth-btn auth-btn-logout"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}" class="auth-btn auth-btn-login">Войти</a>
                     <a href="{{ route('register') }}" class="auth-btn auth-btn-register">Начать</a>
@@ -294,7 +302,7 @@
         <a href="/faq" class="nav-link" @click="mobileOpen = false">FAQ</a>
         <form action="{{ route('toggle-theme') }}" method="POST">
             @csrf
-            <button type="submit" class="nav-link" style="border:none; background:none; width:100%; text-align:left; cursor:pointer;">
+            <button type="submit" class="nav-link" style="border:none; background:none; width:100%; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px;">
                 @if($theme === 'dark')
                     <i class="bi bi-sun"></i> Светлая тема
                 @else
@@ -303,7 +311,11 @@
             </button>
         </form>
         @auth
-            <a href="{{ route('dashboard') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false">Панель управления</a>
+            <a href="{{ route('dashboard') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false"><i class="bi bi-grid-1x2"></i> Кабинет</a>
+            <form action="{{ route('logout') }}" method="POST" style="margin-top: 12px;">
+                @csrf
+                <button type="submit" class="auth-btn auth-btn-logout" style="width:100%; text-align:center; padding:14px; font-size:1rem;"><i class="bi bi-box-arrow-right"></i> Выйти из аккаунта</button>
+            </form>
         @else
             <a href="{{ route('login') }}" class="auth-btn auth-btn-login" style="text-align:center;" @click="mobileOpen = false">Войти</a>
             <a href="{{ route('register') }}" class="auth-btn auth-btn-register" @click="mobileOpen = false">Регистрация</a>
