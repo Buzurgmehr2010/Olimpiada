@@ -208,8 +208,7 @@
             </a>
 
             <nav class="admin-nav">
-                <a href="{{ route('home') }}" class="admin-nav-link"><i class="bi bi-house-door"></i> Главная</a>
-                <a href="{{ route('dashboard') }}" class="admin-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Обзор</a>
+                <a href="{{ route('dashboard') }}" class="admin-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Кабинет</a>
                 @if(Auth::user()->role === 'admin')
                 <a href="{{ route('admin.olympiads.index') }}" class="admin-nav-link {{ request()->routeIs('admin.olympiads.*') ? 'active' : '' }}"><i class="bi bi-trophy"></i> Олимпиады</a>
                 <a href="{{ route('admin.settings.index') }}" class="admin-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"><i class="bi bi-palette"></i> Настройки</a>
