@@ -214,7 +214,6 @@
                 <a href="{{ route('admin.olympiads.index') }}" class="admin-nav-link {{ request()->routeIs('admin.olympiads.*') ? 'active' : '' }}"><i class="bi bi-trophy"></i> Олимпиады</a>
                 <a href="{{ route('admin.settings.index') }}" class="admin-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"><i class="bi bi-palette"></i> Настройки</a>
                 @endif
-                <a href="{{ route('profile.edit') }}" class="admin-nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="bi bi-person-gear"></i> Профиль</a>
             </nav>
 
             <div class="admin-header-actions">
