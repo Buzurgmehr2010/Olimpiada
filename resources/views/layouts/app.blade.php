@@ -94,22 +94,20 @@
         .admin-user-btn {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 8px 18px; border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; font-weight: 600; font-size: 0.9rem;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;
             text-decoration: none; transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
         }
-        .admin-user-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.4); }
+        .admin-user-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         .admin-logout-btn {
             display: inline-flex; align-items: center; justify-content: center;
             width: 38px; height: 38px; border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border: none; font-size: 1.05rem;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); font-size: 1.05rem;
             cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
         }
-        .admin-logout-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.5); }
+        .admin-logout-btn:hover { border-color: var(--primary); color: var(--primary); }
 
         /* Content */
         .admin-content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
