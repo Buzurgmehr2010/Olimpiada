@@ -68,62 +68,14 @@
     <!-- Charts -->
     <div class="dash-charts-grid">
         <!-- Countries Donut -->
-        <div class="card" style="overflow: visible;">
+        <div class="card">
             <div class="card-header">
                 <h2><i class="bi bi-pie-chart" style="margin-right: 8px; color: #6366f1;"></i>По странам</h2>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="position: relative;">
                 @if(isset($countriesData) && count($countriesData) > 0)
-                @php
-                    $total = array_sum($countriesData);
-                    $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6'];
-                    $size = 180;
-                    $stroke = 22;
-                    $radius = ($size - $stroke) / 2;
-                    $center = $size / 2;
-                    $circumference = 2 * M_PI * $radius;
-                    $gap = 4;
-                    $items = [];
-                    foreach($countriesData as $country => $count) {
-                        $percent = $total > 0 ? $count / $total : 0;
-                        $items[] = ['country' => $country, 'count' => $count, 'percent' => $percent];
-                    }
-                @endphp
-                <div style="display: flex; align-items: center; gap: 28px;">
-                    <div style="flex-shrink: 0; position: relative; width: {{ $size }}px; height: {{ $size }}px;">
-                        <svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 {{ $size }} {{ $size }}" style="transform: rotate(-90deg);">
-                            @php $offset = 0; @endphp
-                            @foreach($items as $i => $item)
-                            <circle cx="{{ $center }}" cy="{{ $center }}" r="{{ $radius }}" fill="none"
-                                stroke="{{ $colors[$i % count($colors)] }}" stroke-width="{{ $stroke }}"
-                                stroke-dasharray="{{ max(0, $circumference * $item['percent'] - $gap) }} {{ $circumference - max(0, $circumference * $item['percent'] - $gap) }}"
-                                stroke-dashoffset="{{ -$offset }}"
-                                stroke-linecap="round"
-                                style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); transition: all 0.8s ease;"/>
-                            @php $offset += $circumference * $item['percent']; @endphp
-                            @endforeach
-                        </svg>
-                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--text-heading); line-height: 1;">{{ $total }}</span>
-                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">олимпиад</span>
-                        </div>
-                    </div>
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                        @php $showMax = 6; @endphp
-                        @foreach($items as $i => $item)
-                        @if($i < $showMax)
-                        <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">
-                            <div style="width: 10px; height: 10px; border-radius: 3px; background: {{ $colors[$i % count($colors)] }}; flex-shrink: 0;"></div>
-                            <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['country'] }}</span>
-                            <span style="font-size: 0.78rem; color: var(--text-muted);">{{ $item['count'] }}</span>
-                            <span style="font-size: 0.72rem; color: {{ $colors[$i % count($colors)] }}; font-weight: 700; min-width: 32px; text-align: right;">{{ round($item['percent'] * 100) }}%</span>
-                        </div>
-                        @endif
-                        @endforeach
-                        @if(count($items) > $showMax)
-                        <div style="font-size: 0.78rem; color: var(--text-muted); padding: 4px 10px;">+{{ count($items) - $showMax }} ещё</div>
-                        @endif
-                    </div>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="countriesChart"></canvas>
                 </div>
                 @else
                 <div class="dash-empty-state">
@@ -135,56 +87,14 @@
         </div>
 
         <!-- Levels Donut -->
-        <div class="card" style="overflow: visible;">
+        <div class="card">
             <div class="card-header">
                 <h2><i class="bi bi-graph-up" style="margin-right: 8px; color: #8b5cf6;"></i>По уровням</h2>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="position: relative;">
                 @if(isset($levelsData) && count($levelsData) > 0)
-                @php
-                    $totalLevels = array_sum($levelsData);
-                    $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
-                    $sizeL = 180;
-                    $strokeL = 22;
-                    $radiusL = ($sizeL - $strokeL) / 2;
-                    $centerL = $sizeL / 2;
-                    $circumferenceL = 2 * M_PI * $radiusL;
-                    $gapL = 4;
-                    $levelItems = [];
-                    foreach($levelsData as $level => $count) {
-                        $percent = $totalLevels > 0 ? $count / $totalLevels : 0;
-                        $levelItems[] = ['level' => $level, 'count' => $count, 'percent' => $percent];
-                    }
-                @endphp
-                <div style="display: flex; align-items: center; gap: 28px;">
-                    <div style="flex-shrink: 0; position: relative; width: {{ $sizeL }}px; height: {{ $sizeL }}px;">
-                        <svg width="{{ $sizeL }}" height="{{ $sizeL }}" viewBox="0 0 {{ $sizeL }} {{ $sizeL }}" style="transform: rotate(-90deg);">
-                            @php $offsetL = 0; @endphp
-                            @foreach($levelItems as $i => $item)
-                            <circle cx="{{ $centerL }}" cy="{{ $centerL }}" r="{{ $radiusL }}" fill="none"
-                                stroke="{{ $levelColors[$i % count($levelColors)] }}" stroke-width="{{ $strokeL }}"
-                                stroke-dasharray="{{ max(0, $circumferenceL * $item['percent'] - $gapL) }} {{ $circumferenceL - max(0, $circumferenceL * $item['percent'] - $gapL) }}"
-                                stroke-dashoffset="{{ -$offsetL }}"
-                                stroke-linecap="round"
-                                style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); transition: all 0.8s ease;"/>
-                            @php $offsetL += $circumferenceL * $item['percent']; @endphp
-                            @endforeach
-                        </svg>
-                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--text-heading); line-height: 1;">{{ $totalLevels }}</span>
-                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">олимпиад</span>
-                        </div>
-                    </div>
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                        @foreach($levelItems as $i => $item)
-                        <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">
-                            <div style="width: 10px; height: 10px; border-radius: 3px; background: {{ $levelColors[$i % count($levelColors)] }}; flex-shrink: 0;"></div>
-                            <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['level'] }}</span>
-                            <span style="font-size: 0.78rem; color: var(--text-muted);">{{ $item['count'] }}</span>
-                            <span style="font-size: 0.72rem; color: {{ $levelColors[$i % count($levelColors)] }}; font-weight: 700; min-width: 32px; text-align: right;">{{ round($item['percent'] * 100) }}%</span>
-                        </div>
-                        @endforeach
-                    </div>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="levelsChart"></canvas>
                 </div>
                 @else
                 <div class="dash-empty-state">
@@ -195,6 +105,126 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = document.documentElement.getAttribute('data-theme') || 'light';
+            const textColor = theme === 'dark' ? '#e2e8f0' : '#64748b';
+            const gridColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+            // Countries
+            @if(isset($countriesData) && count($countriesData) > 0)
+            const countriesCtx = document.getElementById('countriesChart').getContext('2d');
+            new Chart(countriesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: {!! json_encode(array_keys($countriesData)) !!},
+                    datasets: [{
+                        data: {!! json_encode(array_values($countriesData)) !!},
+                        backgroundColor: ['#6366f1','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#a855f7','#0ea5e9','#84cc16','#eab308','#d946ef','#3b82f6','#22c55e','#e11d48','#64748b'],
+                        borderWidth: 3,
+                        borderColor: theme === 'dark' ? 'rgba(30,30,30,0.8)' : '#ffffff',
+                        hoverOffset: 12,
+                        hoverBorderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            labels: {
+                                color: textColor,
+                                font: { size: 11, weight: '500', family: 'Inter' },
+                                padding: 8,
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                borderRadius: 3,
+                                useBorderRadius: true,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff',
+                            titleColor: textColor,
+                            bodyColor: textColor,
+                            borderColor: gridColor,
+                            borderWidth: 1,
+                            cornerRadius: 10,
+                            padding: 12,
+                            callbacks: {
+                                label: function(ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percent = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                                    return ' ' + ctx.parsed + ' олимпиад (' + percent + '%)';
+                                }
+                            }
+                        }
+                    },
+                    animation: { animateRotate: true, animateScale: true, duration: 1200 }
+                }
+            });
+            @endif
+
+            // Levels
+            @if(isset($levelsData) && count($levelsData) > 0)
+            const levelsCtx = document.getElementById('levelsChart').getContext('2d');
+            new Chart(levelsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: {!! json_encode(array_keys($levelsData)) !!},
+                    datasets: [{
+                        data: {!! json_encode(array_values($levelsData)) !!},
+                        backgroundColor: ['#6366f1','#10b981','#f59e0b','#ef4444','#06b6d4','#ec4899'],
+                        borderWidth: 3,
+                        borderColor: theme === 'dark' ? 'rgba(30,30,30,0.8)' : '#ffffff',
+                        hoverOffset: 12,
+                        hoverBorderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            labels: {
+                                color: textColor,
+                                font: { size: 11, weight: '500', family: 'Inter' },
+                                padding: 8,
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                borderRadius: 3,
+                                useBorderRadius: true,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff',
+                            titleColor: textColor,
+                            bodyColor: textColor,
+                            borderColor: gridColor,
+                            borderWidth: 1,
+                            cornerRadius: 10,
+                            padding: 12,
+                            callbacks: {
+                                label: function(ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percent = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                                    return ' ' + ctx.parsed + ' (' + percent + '%)';
+                                }
+                            }
+                        }
+                    },
+                    animation: { animateRotate: true, animateScale: true, duration: 1200 }
+                }
+            });
+            @endif
+        });
+    </script>
 
     <!-- Quick Actions -->
     <div class="dash-quick-actions">
