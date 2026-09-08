@@ -122,8 +122,7 @@
                     datasets: [{
                         data: {!! json_encode(array_values($countriesData)) !!},
                         backgroundColor: ['#6366f1','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#a855f7','#0ea5e9','#84cc16','#eab308','#d946ef','#3b82f6','#22c55e','#e11d48','#64748b'],
-                        borderWidth: 3,
-                        borderColor: theme === 'dark' ? 'rgba(30,30,30,0.8)' : '#ffffff',
+                        borderWidth: 0,
                         hoverOffset: 12,
                         hoverBorderWidth: 0,
                     }]
@@ -178,9 +177,7 @@
                     datasets: [{
                         data: {!! json_encode(array_values($levelsData)) !!},
                         backgroundColor: ['#6366f1','#10b981','#f59e0b','#ef4444','#06b6d4','#ec4899'],
-                        borderWidth: 3,
-                        borderColor: theme === 'dark' ? 'rgba(30,30,30,0.8)' : '#ffffff',
-                        hoverOffset: 12,
+                        borderWidth: 0,
                         hoverBorderWidth: 0,
                     }]
                 },
