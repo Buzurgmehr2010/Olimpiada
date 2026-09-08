@@ -264,8 +264,8 @@
 
         <!-- Toggle -->
         <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 48px;" class="pricing-toggle reveal">
-            <button class="pricing-toggle-btn active" id="toggleMonthly" onclick="switchPricing('monthly')">Ежемесячный</button>
-            <button class="pricing-toggle-btn" id="toggleYearly" onclick="switchPricing('yearly')">
+            <button class="pricing-toggle-btn active" id="toggleMonthly">Ежемесячный</button>
+            <button class="pricing-toggle-btn" id="toggleYearly">
                 Годовой <span style="background: rgba(16,185,129,0.1); color: #10b981; padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-left: 4px;">-20%</span>
             </button>
         </div>
@@ -366,26 +366,7 @@
             </div>
         </div>
     </div>
-    <script>
-        function switchPricing(type) {
-            const monthlyEls = document.querySelectorAll('.price-monthly');
-            const yearlyEls = document.querySelectorAll('.price-yearly');
-            const monthlyBtn = document.getElementById('toggleMonthly');
-            const yearlyBtn = document.getElementById('toggleYearly');
-
-            if (type === 'yearly') {
-                monthlyEls.forEach(el => el.style.display = 'none');
-                yearlyEls.forEach(el => el.style.display = 'inline');
-                yearlyBtn.classList.add('active');
-                monthlyBtn.classList.remove('active');
-            } else {
-                monthlyEls.forEach(el => el.style.display = 'inline');
-                yearlyEls.forEach(el => el.style.display = 'none');
-                monthlyBtn.classList.add('active');
-                yearlyBtn.classList.remove('active');
-            }
-        }
-    </script>
+</section>
 </section>
 
 <!-- CTA -->
@@ -733,6 +714,8 @@
     .pricing-toggle-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
 
     /* Trust bar */
+
+    /* Trust bar */
     .trust-bar { display: flex; align-items: center; gap: 32px; padding: 24px 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; flex-wrap: wrap; justify-content: center; }
     .trust-item { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.9rem; }
     .trust-item i { font-size: 1.2rem; }
@@ -852,6 +835,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+    });
+
+    // Pricing toggle
+    const monthlyBtn = document.getElementById('toggleMonthly');
+    const yearlyBtn = document.getElementById('toggleYearly');
+    if (monthlyBtn && yearlyBtn) {
+        monthlyBtn.addEventListener('click', function() {
+            document.querySelectorAll('.price-monthly').forEach(el => el.style.display = 'inline');
+            document.querySelectorAll('.price-yearly').forEach(el => el.style.display = 'none');
+            monthlyBtn.classList.add('active');
+            yearlyBtn.classList.remove('active');
+        });
+        yearlyBtn.addEventListener('click', function() {
+            document.querySelectorAll('.price-monthly').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.price-yearly').forEach(el => el.style.display = 'inline');
+            yearlyBtn.classList.add('active');
+            monthlyBtn.classList.remove('active');
+        });
+    }
 });
 </script>
 @endpush
