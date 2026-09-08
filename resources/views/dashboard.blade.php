@@ -68,7 +68,7 @@
     <!-- Charts -->
     <div class="dash-charts-grid">
         <!-- Countries Donut -->
-        <div class="card">
+        <div class="card" style="overflow: visible;">
             <div class="card-header">
                 <h2><i class="bi bi-pie-chart" style="margin-right: 8px; color: #6366f1;"></i>По странам</h2>
             </div>
@@ -76,46 +76,53 @@
                 @if(isset($countriesData) && count($countriesData) > 0)
                 @php
                     $total = array_sum($countriesData);
-                    $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
-                    $radius = 70;
+                    $colors = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6'];
+                    $size = 180;
+                    $stroke = 22;
+                    $radius = ($size - $stroke) / 2;
+                    $center = $size / 2;
                     $circumference = 2 * M_PI * $radius;
-                    $offset = 0;
+                    $gap = 4;
                     $items = [];
                     foreach($countriesData as $country => $count) {
                         $percent = $total > 0 ? $count / $total : 0;
-                        $items[] = ['country' => $country, 'count' => $count, 'percent' => $percent, 'color' => $colors[array_search($country, array_keys($countriesData)) % count($colors)]];
+                        $items[] = ['country' => $country, 'count' => $count, 'percent' => $percent];
                     }
                 @endphp
-                <div style="display: flex; align-items: center; gap: 32px;">
-                    <div style="flex-shrink: 0; position: relative;">
-                        <svg width="164" height="164" viewBox="0 0 164 164">
-                            <circle cx="82" cy="82" r="{{ $radius }}" fill="none" stroke="var(--bg-hover)" stroke-width="18"/>
+                <div style="display: flex; align-items: center; gap: 28px;">
+                    <div style="flex-shrink: 0; position: relative; width: {{ $size }}px; height: {{ $size }}px;">
+                        <svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 {{ $size }} {{ $size }}" style="transform: rotate(-90deg);">
                             @php $offset = 0; @endphp
-                            @foreach($items as $item)
-                            <circle cx="82" cy="82" r="{{ $radius }}" fill="none"
-                                stroke="{{ $item['color'] }}" stroke-width="18"
-                                stroke-dasharray="{{ $circumference * $item['percent'] }} {{ $circumference * (1 - $item['percent']) }}"
+                            @foreach($items as $i => $item)
+                            <circle cx="{{ $center }}" cy="{{ $center }}" r="{{ $radius }}" fill="none"
+                                stroke="{{ $colors[$i % count($colors)] }}" stroke-width="{{ $stroke }}"
+                                stroke-dasharray="{{ max(0, $circumference * $item['percent'] - $gap) }} {{ $circumference - max(0, $circumference * $item['percent'] - $gap) }}"
                                 stroke-dashoffset="{{ -$offset }}"
                                 stroke-linecap="round"
-                                transform="rotate(-90 82 82)"
-                                style="transition: stroke-dasharray 1s ease;"/>
+                                style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); transition: all 0.8s ease;"/>
                             @php $offset += $circumference * $item['percent']; @endphp
                             @endforeach
                         </svg>
                         <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--text-heading);">{{ $total }}</span>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">всего</span>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--text-heading); line-height: 1;">{{ $total }}</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">олимпиад</span>
                         </div>
                     </div>
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                        @foreach($items as $item)
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 10px; height: 10px; border-radius: 50%; background: {{ $item['color'] }}; flex-shrink: 0;"></div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                        @php $showMax = 6; @endphp
+                        @foreach($items as $i => $item)
+                        @if($i < $showMax)
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">
+                            <div style="width: 10px; height: 10px; border-radius: 3px; background: {{ $colors[$i % count($colors)] }}; flex-shrink: 0;"></div>
                             <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['country'] }}</span>
-                            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">{{ $item['count'] }}</span>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ round($item['percent'] * 100) }}%</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">{{ $item['count'] }}</span>
+                            <span style="font-size: 0.72rem; color: {{ $colors[$i % count($colors)] }}; font-weight: 700; min-width: 32px; text-align: right;">{{ round($item['percent'] * 100) }}%</span>
                         </div>
+                        @endif
                         @endforeach
+                        @if(count($items) > $showMax)
+                        <div style="font-size: 0.78rem; color: var(--text-muted); padding: 4px 10px;">+{{ count($items) - $showMax }} ещё</div>
+                        @endif
                     </div>
                 </div>
                 @else
@@ -128,7 +135,7 @@
         </div>
 
         <!-- Levels Donut -->
-        <div class="card">
+        <div class="card" style="overflow: visible;">
             <div class="card-header">
                 <h2><i class="bi bi-graph-up" style="margin-right: 8px; color: #8b5cf6;"></i>По уровням</h2>
             </div>
@@ -136,43 +143,45 @@
                 @if(isset($levelsData) && count($levelsData) > 0)
                 @php
                     $totalLevels = array_sum($levelsData);
-                    $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
-                    $radiusL = 70;
+                    $levelColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'];
+                    $sizeL = 180;
+                    $strokeL = 22;
+                    $radiusL = ($sizeL - $strokeL) / 2;
+                    $centerL = $sizeL / 2;
                     $circumferenceL = 2 * M_PI * $radiusL;
+                    $gapL = 4;
                     $levelItems = [];
                     foreach($levelsData as $level => $count) {
                         $percent = $totalLevels > 0 ? $count / $totalLevels : 0;
-                        $levelItems[] = ['level' => $level, 'count' => $count, 'percent' => $percent, 'color' => $levelColors[array_search($level, array_keys($levelsData)) % count($levelColors)]];
+                        $levelItems[] = ['level' => $level, 'count' => $count, 'percent' => $percent];
                     }
                 @endphp
-                <div style="display: flex; align-items: center; gap: 32px;">
-                    <div style="flex-shrink: 0; position: relative;">
-                        <svg width="164" height="164" viewBox="0 0 164 164">
-                            <circle cx="82" cy="82" r="{{ $radiusL }}" fill="none" stroke="var(--bg-hover)" stroke-width="18"/>
+                <div style="display: flex; align-items: center; gap: 28px;">
+                    <div style="flex-shrink: 0; position: relative; width: {{ $sizeL }}px; height: {{ $sizeL }}px;">
+                        <svg width="{{ $sizeL }}" height="{{ $sizeL }}" viewBox="0 0 {{ $sizeL }} {{ $sizeL }}" style="transform: rotate(-90deg);">
                             @php $offsetL = 0; @endphp
-                            @foreach($levelItems as $item)
-                            <circle cx="82" cy="82" r="{{ $radiusL }}" fill="none"
-                                stroke="{{ $item['color'] }}" stroke-width="18"
-                                stroke-dasharray="{{ $circumferenceL * $item['percent'] }} {{ $circumferenceL * (1 - $item['percent']) }}"
+                            @foreach($levelItems as $i => $item)
+                            <circle cx="{{ $centerL }}" cy="{{ $centerL }}" r="{{ $radiusL }}" fill="none"
+                                stroke="{{ $levelColors[$i % count($levelColors)] }}" stroke-width="{{ $strokeL }}"
+                                stroke-dasharray="{{ max(0, $circumferenceL * $item['percent'] - $gapL) }} {{ $circumferenceL - max(0, $circumferenceL * $item['percent'] - $gapL) }}"
                                 stroke-dashoffset="{{ -$offsetL }}"
                                 stroke-linecap="round"
-                                transform="rotate(-90 82 82)"
-                                style="transition: stroke-dasharray 1s ease;"/>
+                                style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); transition: all 0.8s ease;"/>
                             @php $offsetL += $circumferenceL * $item['percent']; @endphp
                             @endforeach
                         </svg>
                         <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--text-heading);">{{ $totalLevels }}</span>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">всего</span>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--text-heading); line-height: 1;">{{ $totalLevels }}</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">олимпиад</span>
                         </div>
                     </div>
-                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                        @foreach($levelItems as $item)
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 10px; height: 10px; border-radius: 50%; background: {{ $item['color'] }}; flex-shrink: 0;"></div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                        @foreach($levelItems as $i => $item)
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'">
+                            <div style="width: 10px; height: 10px; border-radius: 3px; background: {{ $levelColors[$i % count($levelColors)] }}; flex-shrink: 0;"></div>
                             <span style="flex: 1; font-size: 0.82rem; color: var(--text-primary); font-weight: 600;">{{ $item['level'] }}</span>
-                            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">{{ $item['count'] }}</span>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ round($item['percent'] * 100) }}%</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">{{ $item['count'] }}</span>
+                            <span style="font-size: 0.72rem; color: {{ $levelColors[$i % count($levelColors)] }}; font-weight: 700; min-width: 32px; text-align: right;">{{ round($item['percent'] * 100) }}%</span>
                         </div>
                         @endforeach
                     </div>
